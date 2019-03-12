@@ -102,3 +102,30 @@ create table intes_consumo (
     constraint Fk_itens_consumo  foreign key (con_cod) references consumo (con_cod),
     constraint Fk_itens_produtos foreign key (pro_cod) references produtos (pro_cod)
 );
+
+/*Sequence in Oracle*/
+
+create sequence seq_cod_parcelas increment by 1 start with 0;
+create sequence seq_cod_consumo increment by 1 start with 0;
+create sequence seq_cod_produtos increment by 1 start with 0;
+create sequence seq_cod_locais increment by 1 start with 0;
+create sequence seq_cod_reservas increment by 1 start with 0;
+create sequence seq_cod_clientes increment by 1 start with 0;
+create sequence seq_cod_quartos increment by 1 start with 0;
+create sequence seq_cod_categoriaquartos increment by 1 start with 0;
+
+/*Sequence in Mysql
+Para utilizar uma sequencia em mysql adiciona-se ao lado do atributo na hora da criação
+o parametro  AUTO_INCREMENT 
+
+o valor inicial da sequencia pode ser alterado com: 
+ALTER TABLE t AUTO_INCREMENT = 100; 
+
+ou pode ser inserido na hora do create 
+CREATE TABLE T (
+    id integer NOT NULL AUTO_INCREMENT = 100,
+    .
+    .
+    .
+);
+*/
