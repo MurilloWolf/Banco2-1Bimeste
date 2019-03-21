@@ -92,7 +92,7 @@ create table consumo (
 
 );
 
-create table intes_consumo (
+create table itens_consumo (
     pro_cod integer not null,
     con_cod integer not null,
     ite_preco numeric (5,2),
