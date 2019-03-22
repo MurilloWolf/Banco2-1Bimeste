@@ -27,7 +27,7 @@ create table produtos (
 create table promocao(
     pro_datainicio date not null,
     pro_cod integer not null,
-    pro_datafim date,
+    pro_datafim date not null,
     pro_valor numeric (5,2),
 
     constraint Pk_promocao primary key (pro_datainicio,pro_cod),
@@ -54,7 +54,7 @@ create table quartos (
 create table reservas (
     res_cod integer not null,
     res_qtdparcelas integer,
-    res_qtspessoas integer,
+    res_qtdpessoas integer,
     res_status varchar(15),
     res_dtsaida date, 
     res_dtentrada date,

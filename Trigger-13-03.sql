@@ -103,10 +103,9 @@ begin
         begin
             --selecionar os numeros dos quartos cuja a data de saida diferente de null e menor do que a data e hora atual(SYSDATE)
             --e selecionar o numero do quarto que esteja de acordo com a categoria da reserva (cat_cod == :new.cat_cod)
-            select qua_cod from reservas where res_dtSaida <> null and res_dtSaida < SYSDATE and qua_cod in (
-            
-            select qua_cod into numeroDoQuarto from quartos where cat_cod = :new.cat_cod; )
-            
+            select q.qua_cod into numeroDoquarto from RESERVAS r , QUARTOS q where ROWNUM = 1 and q.cat_cod = :new.cat_cod AND
+                                                                         r.res_dtSaida is not null and r.res_dtSaida < SYSDATE;
+            update reservas set qua_cod = numeroDoQuarto where res_cod = :new.res_cod;
             exception
                 when NO_DATA_FOUND then 
                 RAISE_APPLICATION_ERROR(-20500,'nenhum quarto livre foi encontrado');
@@ -140,5 +139,34 @@ begin
         insert into parcelas (par_cod,res_cod,par_valor,par_dtVencimento,par_dtPagamento) values (seq_cod_parcelas.nextval,:new.res_cod,precoDoQuarto,dataDeVencimento,:new.res_dtSaida);
 
     end if;
+
+end;
+
+create or replace trigger Trex_5 before update on categoria_quartos for each row
+declare 
+    resultado integer;
+begin 
+    select count (res_cod) into resultado from reservas where UPPER( res_status ) = 'P' and :new.cat_capacidade < res_qtdpessoas;
+   
+    if( resultado > 0 ) then
+        RAISE_APPLICATION_ERROR (-20001,'não é possivel alterar a quantidade de pessoas do quarto');
+    end if;
+
+end;
+
+create or replace trigger Trex_6 before delete on promocao for each row
+declare 
+    resultado integer;
+    dataDeInicio date;
+    dataDeFim date;
+begin 
+    select pro_datainicio, pro_datafim into dataDeInicio, dataDeFim from promocao where pro_cod = :old.pro_cod;
+    select count (con_cod) into resultado from consumo where con_data between dataDeInicio and dataDeFim;
+
+    if(resultado > 0) then
+        RAISE_APPLICATION_ERROR(-20001,'promocao nao pode ser excluida');
+    end if;
+
+
 
 end;
